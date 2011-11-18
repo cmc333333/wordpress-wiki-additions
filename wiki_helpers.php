@@ -7,7 +7,10 @@ class WikiHelpers {
 			return $tmp->display_name;
 		else:
 			$anon_meta = get_post_meta($post->ID, '_wpw_anon_meta', true);
-			return 'anonymous ('.$anon_meta['ip'].', '.$anon_meta['hostname'].')';
+                        if ($anon_meta['authorname'])
+                          return $anon_meta['authorname'];
+                        else
+                          return 'anonymous ('.$anon_meta['ip'].', '.$anon_meta['hostname'].')';
 		endif;
 	}
 	

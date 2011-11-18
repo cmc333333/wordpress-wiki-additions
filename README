@@ -1,0 +1,2 @@
+1. Simple addition which adds an extra field when an anonymous user is editing the wiki. This field allows the author
+to name his/herself. The name will then appear in the revision history.

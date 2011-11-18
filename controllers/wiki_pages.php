@@ -187,10 +187,11 @@ class WikiPageController {
 	
 	function get_edit($content, $class = null ){
 		global $post;
+                $nameField = is_user_logged_in() ? '' : 'Author: <input type="text" name="wpw_anon_author" id="anonAuthor" /><br />';
 		return '<div id="wpw_edit_div" '.$class.'>
 					<form action="" method="post">
 						<textarea name="wpw_editor_content" style="width:100%;height:200px;" id="area1">'.$content.'</textarea>
-						'.wp_nonce_field('wpw_edit_form').'
+						'.wp_nonce_field('wpw_edit_form'). $nameField . '
 						<input type="submit" value="save" id="wpw_save" />
 						<input type="hidden" value="'.$post->ID.'" name="wpw_id" />
 					</form>
@@ -262,10 +263,12 @@ class WikiPageController {
 		$nicedit_icons_path = plugin_dir_url(__FILE__).'nicedit/nicEditorIcons.gif';
 		$wpw_ajax_url = admin_url('admin-ajax.php');
 		$get_content_to_save = '$("#area1").val()';
+                $get_anon_author = '$("#anonAuthor").val()';
 		$nicedit = false;
 		
 		$ajax_args = '	action : "ajax_save",
 						wpw_editor_content : '.$get_content_to_save.',
+                                                wpw_anon_author: ' . $get_anon_author . ',
 						wpw_id : "'.$post->ID.'",
 						_wpnonce : $("#_wpnonce").val()';
 		
@@ -369,7 +372,8 @@ class WikiPageController {
 				if (!is_user_logged_in()):
 					$wpw_anon_meta = array(
 						'ip' => $_SERVER['REMOTE_ADDR'],
-						'hostname' => $_SERVER['REMOTE_HOST']
+                                                'hostname' => $_SERVER['REMOTE_HOST'],
+                                                'authorname' => $wpw_anon_author
 					);
 					
 					add_post_meta($n_id, '_wpw_anon_meta', $wpw_anon_meta);
